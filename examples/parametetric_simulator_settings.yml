@@ -1,5 +1,17 @@
 general:
-  max_simulations: 10
-  script_name: sleeping.py
+  max_workers: 10
+  script_name:
   default_args:
     - "--debug"
+paths:
+  logs: ${hydra.runtime.cwd}/logs
+rules:
+  seed:
+      arguments:
+          - --seed ${seed}
+          - --log_file log_file_${seed}.log
+      iterator:
+          key: seed
+          start: 0
+          end: 20
+          step: 1
