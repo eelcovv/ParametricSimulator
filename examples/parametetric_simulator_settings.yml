@@ -1,2 +1,3 @@
 general:
   script_name: sleeping.py
+  default_args:
