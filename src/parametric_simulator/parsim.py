@@ -9,8 +9,8 @@ console script. To run this script uncomment the following lines in the
 Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
 which will install the command ``fibonacci`` inside your current environment.
 
-Besides console scripts, the header (i.e. until ``_logger``...) of this file can
-also be used as template for Python modules.
+Besides console scripts, the header (i.e., until ``_logger``...) of this file can
+also be used as a template for Python modules.
 
 Note:
     This file can be renamed depending on your needs or safely removed if not needed.
@@ -35,7 +35,7 @@ _logger = logging.getLogger(__name__)
 
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
-# Python scripts/interactive interpreter, e.g. via
+# Python scripts/interactive interpreter, e.g., via
 # `from parametric_simulator.skeleton import fib`,
 # when using this Python module as a library.
 
@@ -67,10 +67,10 @@ def parse_args(args):
 
     Args:
       args (List[str]): command line parameters as list of strings
-          (for example  ``["--help"]``).
+          (for example, ``["--help"]``).
 
     Returns:
-      :obj:`argparse.Namespace`: command line parameters namespace
+      obj:`argparse.Namespace`: command line parameters namespace
     """
     parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
     parser.add_argument(
@@ -104,9 +104,12 @@ def setup_logging(loglevel):
     Args:
       loglevel (int): minimum loglevel for emitting messages
     """
-    logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+    log_format = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
     logging.basicConfig(
-        level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %H:%M:%S"
+        level=loglevel,
+        stream=sys.stdout,
+        format=log_format,
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
 
@@ -117,8 +120,8 @@ def main(args):
     ``stdout`` in a nicely formatted message.
 
     Args:
-      args (List[str]): command line parameters as list of strings
-          (for example  ``["--verbose", "42"]``).
+      args (List[str]): command line parameters as a list of strings
+          (for example, ``["--verbose", "42"]``).
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
@@ -130,7 +133,7 @@ def main(args):
 def run():
     """Calls :func:`main` passing the CLI arguments extracted from :obj:`sys.argv`
 
-    This function can be used as entry point to create console scripts with setuptools.
+    This function can be used as an entry point to create console scripts with setuptools.
     """
     main(sys.argv[1:])
 
