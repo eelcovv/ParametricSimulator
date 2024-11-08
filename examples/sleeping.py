@@ -5,10 +5,11 @@ Examples
 
 Sleep for 10 seconds::
 
-    python sleeping.py -s 10
+    python sleeping.py --sleep 10
 
 Sleep for 0.1 minute::
-    python sleeping.py -s 0.1 -u m
+
+    python sleeping.py --sleep 0.1 --units m
 """
 
 import argparse
@@ -61,7 +62,7 @@ def parse_the_arguments(argv):
     )
     parser.add_argument(
         "-vv",
-        "--very-verbose",
+        "--debug",
         dest="loglevel",
         help="Set loglevel to DEBUG",
         action="store_const",
@@ -114,7 +115,8 @@ def get_number_of_seconds(sleep_time: float, units: str) -> int:
 
     Args:
       sleep_time (float): The amount of time to sleep.
-      units (str): The unit of time, can be 's' for seconds, 'm' for minutes, or 'h' for hours.
+      units (str): The unit of time.
+         This can be 's' for seconds, 'm' for minutes, or 'h' for hours.
 
     Returns:
       int: The equivalent amount of time in seconds.
@@ -148,7 +150,7 @@ def main(argv):
     # Calculate the number of seconds to wait
     number_of_seconds_to_wait = get_number_of_seconds(sleep_time=args.sleep, units=args.units)
 
-    # Log the start of the dummy script and sleep operation
+    # Log the start of the sleep script and sleep operation
     _logger.info(f"Start dummy script here. Going to sleep for {number_of_seconds_to_wait} seconds")
 
     # Sleep for the calculated number of seconds
