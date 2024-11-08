@@ -1,0 +1,6 @@
+general:
+  max_simulations: 10
+  script_name:
+  default_args:
+path:
+  logs: ${hydra.runtime.cwd}/logs

@@ -1,28 +1,14 @@
 """
-This is a skeleton file that can serve as a starting point for a Python
-console script. To run this script uncomment the following lines in the
-``[options.entry_points]`` section in ``setup.cfg``::
-
-    console_scripts =
-         fibonacci = parametric_simulator.skeleton:run
-
-Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
-which will install the command ``fibonacci`` inside your current environment.
-
-Besides console scripts, the header (i.e., until ``_logger``...) of this file can
-also be used as a template for Python modules.
-
-Note:
-    This file can be renamed depending on your needs or safely removed if not needed.
-
-References:
-    - https://setuptools.pypa.io/en/latest/userguide/entry_point.html
-    - https://pip.pypa.io/en/stable/reference/pip_install
+A simple Python script to run a script with a set of parameters.
 """
 
 import argparse
 import logging
 import sys
+from pathlib import Path
+
+import hydra
+import yaml
 
 from parametric_simulator import __version__
 
@@ -32,37 +18,10 @@ __license__ = "MIT"
 
 _logger = logging.getLogger(__name__)
 
-
-# ---- Python API ----
-# The functions defined in this section can be imported by users in their
-# Python scripts/interactive interpreter, e.g., via
-# `from parametric_simulator.skeleton import fib`,
-# when using this Python module as a library.
+CONFDIR = Path(__file__).parent / Path("conf")
 
 
-def fib(n):
-    """Fibonacci example function
-
-    Args:
-      n (int): integer
-
-    Returns:
-      int: n-th Fibonacci number
-    """
-    assert n > 0
-    a, b = 1, 1
-    for _i in range(n - 1):
-        a, b = b, a + b
-    return a
-
-
-# ---- CLI ----
-# The functions defined in this section are wrappers around the main Python
-# API allowing them to be called directly from the terminal as a CLI
-# executable/script.
-
-
-def parse_args(args):
+def parse_args():
     """Parse command line parameters
 
     Args:
@@ -78,7 +37,15 @@ def parse_args(args):
         action="version",
         version=f"ParametricSimulator {__version__}",
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
+    parser.add_argument(
+        "--script",
+        help="The script to execute. If not given"
+        ", the script will be obtained from the settings file.",
+    )
+    parser.add_argument(
+        "--settings_file",
+        help="The settings file containing with all the processing information",
+    )
     parser.add_argument(
         "-v",
         "--verbose",
@@ -95,7 +62,9 @@ def parse_args(args):
         action="store_const",
         const=logging.DEBUG,
     )
-    return parser.parse_args(args)
+    parsed_arguments = parser.parse_args()
+    parsed_arguments.loglevel = parsed_arguments.loglevel or logging.WARN
+    return parsed_arguments
 
 
 def setup_logging(loglevel):
@@ -113,21 +82,37 @@ def setup_logging(loglevel):
     )
 
 
-def main(args):
+@hydra.main(version_base=None, config_path=CONFDIR.as_posix(), config_name="config")
+def main(cfg):
     """Wrapper allowing :func:`fib` to be called with string arguments in a CLI fashion
 
     Instead of returning the value from :func:`fib`, it prints the result to the
     ``stdout`` in a nicely formatted message.
 
     Args:
+      cfg:
       args (List[str]): command line parameters as a list of strings
           (for example, ``["--verbose", "42"]``).
     """
-    args = parse_args(args)
+    print(cfg)
+    return
+    args = parse_args()
     setup_logging(args.loglevel)
-    _logger.debug("Starting crazy calculations...")
-    print(f"The {args.n}-th Fibonacci number is {fib(args.n)}")
-    _logger.info("Script ends here")
+
+    general_settings = None
+
+    if args.settings_file is not None:
+        _logger.info(f"Reading settings file: {args.settings_file}")
+        with open(args.settings_file) as stream:
+            settings = yaml.safe_load(stream)
+        try:
+            general_settings = settings["general"]
+        except KeyError as err:
+            _logger.error(f"KeyError: {err}")
+            _logger.error("Could not find 'general' in settings file. Exiting.")
+            sys.exit(1)
+
+    print(general_settings)
 
 
 def run():
@@ -135,7 +120,7 @@ def run():
 
     This function can be used as an entry point to create console scripts with setuptools.
     """
-    main(sys.argv[1:])
+    main()
 
 
 if __name__ == "__main__":
