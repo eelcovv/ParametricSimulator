@@ -55,3 +55,4 @@ MANIFEST
 .conda*/
 .python-version
 /examples/outputs/
+outputs/
