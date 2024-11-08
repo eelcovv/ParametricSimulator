@@ -14,11 +14,6 @@ from hydra.core.config_store import ConfigStore
 from parametric_simulator import __version__
 from parametric_simulator.config import ParametricSimulatorConfig
 
-from pathlib import Path
-
-from bibiflags import BibiFlags
-
-
 __author__ = "Eelco van Vliet"
 __copyright__ = "Eelco van Vliet"
 __license__ = "MIT"
@@ -29,14 +24,15 @@ CONFDIR = Path(__file__).parent / Path("conf")
 
 
 def parse_args():
-    """Parse command line parameters
-
-    Args:
-      args (List[str]): command line parameters as list of strings
-          (for example, ``["--help"]``).
+    """
+    Parse command-line arguments for the ParametricSimulator script.
 
     Returns:
-      obj:`argparse.Namespace`: command line parameters namespace
+        argparse.Namespace: Parsed command-line arguments containing:
+            - 'version': Display the current version of ParametricSimulator.
+            - 'script': Path to the script to execute, or obtained from settings if not provided.
+            - 'settings_file': Path to the settings file with processing information.
+            - 'loglevel': Logging level, set to INFO with '-v' or DEBUG with '-vv', defaults to WARN.
     """
     parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
     parser.add_argument(
@@ -95,8 +91,23 @@ cs.store(name="parametric_simulator_config", node=ParametricSimulatorConfig)
 
 @hydra.main(version_base=None, config_path=CONFDIR.as_posix(), config_name="config")
 def main(cfg: ParametricSimulatorConfig):
-    flags = BibiFlags(root=str(Path(__file__).parent))
-    print(flags.parameters)
+    """
+    Main function for the ParametricSimulator script.
+
+    This function is the entry point for the script, utilizing Hydra for configuration management.
+    It parses command-line arguments, sets up logging, and reads settings from a specified file.
+
+    Args:
+        cfg (ParametricSimulatorConfig): Configuration object provided by Hydra.
+
+    Steps:
+        1. Parse command-line arguments to determine the script and settings file paths.
+        2. Setup logging based on the specified log level.
+        3. If a settings file is provided, read and load the general settings.
+
+    Note:
+        The function will exit with an error code if the 'general' section is missing in the settings file.
+    """
     args = parse_args()
     setup_logging(args.loglevel)
 
@@ -117,6 +128,16 @@ def main(cfg: ParametricSimulatorConfig):
 
 
 def run():
+    """
+    Main entry point for the ParametricSimulator script.
+
+    This function serves as the entry point for the script, intended to be executed
+    as a standalone program. It delegates the execution to the `main` function, which
+    handles the argument parsing, logging setup, and script execution.
+
+    Returns:
+        None
+    """
     main()
 
 
