@@ -1,6 +1,6 @@
 import pytest
 
-from parametricsimulator.skeleton import fib, main
+from parametric_simulator.parsim import fib, main
 
 __author__ = "Eelco van Vliet"
 __copyright__ = "Eelco van Vliet"

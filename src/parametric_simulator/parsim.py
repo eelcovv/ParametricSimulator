@@ -4,7 +4,7 @@ console script. To run this script uncomment the following lines in the
 ``[options.entry_points]`` section in ``setup.cfg``::
 
     console_scripts =
-         fibonacci = parametricsimulator.skeleton:run
+         fibonacci = parametric_simulator.skeleton:run
 
 Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
 which will install the command ``fibonacci`` inside your current environment.
@@ -24,7 +24,7 @@ import argparse
 import logging
 import sys
 
-from parametricsimulator import __version__
+from parametric_simulator import __version__
 
 __author__ = "Eelco van Vliet"
 __copyright__ = "Eelco van Vliet"
@@ -36,7 +36,7 @@ _logger = logging.getLogger(__name__)
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
 # Python scripts/interactive interpreter, e.g. via
-# `from parametricsimulator.skeleton import fib`,
+# `from parametric_simulator.skeleton import fib`,
 # when using this Python module as a library.
 
 
@@ -144,6 +144,6 @@ if __name__ == "__main__":
     # After installing your project with pip, users can also run your Python
     # modules as scripts via the ``-m`` flag, as defined in PEP 338::
     #
-    #     python -m parametricsimulator.skeleton 42
+    #     python -m parametric_simulator.skeleton 42
     #
     run()
