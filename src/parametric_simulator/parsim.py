@@ -14,6 +14,11 @@ from hydra.core.config_store import ConfigStore
 from parametric_simulator import __version__
 from parametric_simulator.config import ParametricSimulatorConfig
 
+from pathlib import Path
+
+from bibiflags import BibiFlags
+
+
 __author__ = "Eelco van Vliet"
 __copyright__ = "Eelco van Vliet"
 __license__ = "MIT"
@@ -90,9 +95,8 @@ cs.store(name="parametric_simulator_config", node=ParametricSimulatorConfig)
 
 @hydra.main(version_base=None, config_path=CONFDIR.as_posix(), config_name="config")
 def main(cfg: ParametricSimulatorConfig):
-    print(cfg)
-    print(cfg.general.max_workers)
-    return
+    flags = BibiFlags(root=str(Path(__file__).parent))
+    print(flags.parameters)
     args = parse_args()
     setup_logging(args.loglevel)
 
