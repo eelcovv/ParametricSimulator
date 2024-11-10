@@ -2,17 +2,14 @@
 A simple Python script to run a script with a set of parameters.
 """
 
-import argparse
 import logging
 import sys
 from pathlib import Path
 
-import hydra
+import jsonargparse
 import yaml
-from hydra.core.config_store import ConfigStore
 
 from parametric_simulator import __version__
-from parametric_simulator.config import ParametricSimulatorConfig
 
 __author__ = "Eelco van Vliet"
 __copyright__ = "Eelco van Vliet"
@@ -32,9 +29,10 @@ def parse_args():
             - 'version': Display the current version of ParametricSimulator.
             - 'script': Path to the script to execute, or obtained from settings if not provided.
             - 'settings_file': Path to the settings file with processing information.
-            - 'loglevel': Logging level, set to INFO with '-v' or DEBUG with '-vv', defaults to WARN.
+            - 'loglevel': Logging level, set to INFO with '-v' or DEBUG with '-vv', defaults to
+            WARN.
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = jsonargparse.ArgumentParser(description="A simple script to process data.")
     parser.add_argument(
         "--version",
         action="version",
@@ -85,29 +83,7 @@ def setup_logging(loglevel):
     )
 
 
-cs = ConfigStore.instance()
-cs.store(name="parametric_simulator_config", node=ParametricSimulatorConfig)
-
-
-@hydra.main(version_base=None, config_path=CONFDIR.as_posix(), config_name="config")
-def main(cfg: ParametricSimulatorConfig):
-    """
-    Main function for the ParametricSimulator script.
-
-    This function is the entry point for the script, utilizing Hydra for configuration management.
-    It parses command-line arguments, sets up logging, and reads settings from a specified file.
-
-    Args:
-        cfg (ParametricSimulatorConfig): Configuration object provided by Hydra.
-
-    Steps:
-        1. Parse command-line arguments to determine the script and settings file paths.
-        2. Setup logging based on the specified log level.
-        3. If a settings file is provided, read and load the general settings.
-
-    Note:
-        The function will exit with an error code if the 'general' section is missing in the settings file.
-    """
+def main():
     args = parse_args()
     setup_logging(args.loglevel)
 
